@@ -1,7 +1,7 @@
 # SenseHat
 Sense Hat Final Project CS100
 
-#Errors
+# Errors
 Traceback (most recent call last):
   File "/home/pi/SenseHat/LawnMower.py", line 38, in <module>
     sense.set_pixel(loX, loY, [255, 255, 255])
