@@ -38,4 +38,4 @@ while(True):
   sense.set_pixel(loX, loY, [255, 255, 255])
   print(x, " ", y, " ", temp)
   
-  time.sleep(1)
+  time.sleep(2)
