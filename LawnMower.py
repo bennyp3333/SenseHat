@@ -2,6 +2,7 @@ from sense_hat import SenseHat
 import time
 
 sense = SenseHat()
+sense.clear()
 
 moveThresh = 30
 
@@ -18,24 +19,25 @@ loY = 7
 sense.set_pixel(loX, loY, [255, 255, 255])
 
 while(True):
-  orient = sense.get_orientation()
-  x = orient["pitch"]
-  y = orient["roll"]
+    orient = sense.get_orientation()
+    x = orient["pitch"]
+    y = orient["roll"]
+    z = orient["yaw"]
   
-  if (y > moveThresh and y < 180):
-    print("blah")
-    loY += 1
-  elif (y < 360 - moveThresh and y > 180):
-    print("meh")
-    loY -= 1
-  if (x > moveThresh and x < 180):
-    print("yes")
-    loX -= 1
-  elif (x < 360 - moveThresh and x > 180):
-    print("nah")
-    loX += 1
+    if (y > moveThresh and y < 180):
+        print("blah")
+        loY += 1
+    elif (y < 360 - moveThresh and y > 180):
+        print("meh")
+        loY -= 1
+    if (x > moveThresh and x < 180):
+        print("yes")
+        loX -= 1
+    elif (x < 360 - moveThresh and x > 180):
+        print("nah")
+        loX += 1
     
-  sense.set_pixel(loX, loY, [255, 255, 255])
-  print(x, " ", y, " ", temp)
+    sense.set_pixel(loX, loY, [255, 255, 255])
+    print(x, " ", y, " ", z)
   
-  time.sleep(2)
+    time.sleep(1)
