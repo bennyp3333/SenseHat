@@ -38,6 +38,7 @@ while(True):
         loX += 1
     
     sense.set_pixel(loX, loY, [255, 255, 255])
-    print(x, " ", y, " ", z)
+    #print(x, " ", y, " ", z)
+    print("pitch: {0}        roll: {1}         yaw: {2}".format(x, y, z))
   
     time.sleep(1)
