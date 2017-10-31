@@ -48,7 +48,7 @@ class mowing:
       sense.set_pixel(loX, loY, [248, 2, 36])
       if(points == 64):
         print("You Won!")
-      print(points)
+      #print(points)
       #print(x, y, temp)
       
       time.sleep(1)
@@ -58,9 +58,26 @@ class mowing:
     for i in range(0,8):
       for j in range(0,8):
         sense.set_pixel(i,j, self.grassColor)
+    
+    rockList = []
     for i in range(self.count):
-      sense.set_pixel(random.randint(0,7), random.randint(0,7), self.rockColor)
-   
+      sameRock = True #just to initialize to get into while loop
+      while (sameRock == True):
+        sameRock = False
+        rockLoc = [random.randint(0,7), random.randint(0,7)]
+        #print(len(rockList), i)
+        for j in range(len(rockList)):
+          #print("x", rockLoc[0], rockList[j][0])
+          #print("y", rockLoc[1], rockList[j][1])
+          if (rockLoc[0]==rockList[j][0]) and (rockLoc[1]==rockList[j][1]):
+            sameRock = True
+            #print("rock same position")
+            break
+        if sameRock == False:
+          rockList.append(rockLoc) 
+        
+      sense.set_pixel(rockList[i][0], rockList[i][1], self.rockColor)
+     
 
 sense = SenseHat()
 sense.clear()
