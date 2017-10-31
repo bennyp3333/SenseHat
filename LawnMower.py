@@ -61,26 +61,22 @@ class mowing:
     
     rockList = []
     for i in range(self.count):
-      sameRock = False
-      while sameRock == True:
+      sameRock = True #just to initialize to get into while loop
+      while (sameRock == True):
+        sameRock = False
         rockLoc = [random.randint(0,7), random.randint(0,7)]
-        rockList.append(rockLoc)
-        print(str(rockList[i][0]), str(rockList[i][1]))
-        #print(i)
-        
-        for j in range(len(rockList)+1):
-          print("x", rockList[i][0], rockList[j][0])
-          print("y", rockList[i][1], rockList[j][1])
-          if (rockList[i][0]==rockList[j][0]) and (rockList[i][1]==rockList[j][1]):
+        #print(len(rockList), i)
+        for j in range(len(rockList)):
+          #print("x", rockLoc[0], rockList[j][0])
+          #print("y", rockLoc[1], rockList[j][1])
+          if (rockLoc[0]==rockList[j][0]) and (rockLoc[1]==rockList[j][1]):
             sameRock = True
-            print("true")
+            #print("rock same position")
             break
-            
-          else:
-            print("false")
+        if sameRock == False:
+          rockList.append(rockLoc) 
         
-        
-      sense.set_pixel(rockLoc[i][0], rockLoc[i][1], self.rockColor)
+      sense.set_pixel(rockList[i][0], rockList[i][1], self.rockColor)
      
 
 sense = SenseHat()
