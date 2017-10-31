@@ -5,18 +5,16 @@ import time
 # max rgb values are [248,252,248]
 class mowing:
   
-  
   def __init__(self, sense):
     self.sense = sense
     self.count = 5 #temporary
-    moveThresh = 30
-    grassColor = [0,252,0]
-    rockColor = [180,165,150]
+    self.moveThresh = 30
+    self.grassColor = [0,252,0]
+    self.rockColor = [175,155,140]
     
   def lawnMower(self):
     
     temp = sense.get_temperature()
-    
     self.createField()
     loX, lastX, loY, lastY = 0, 0, 7, 7
     points = 0
@@ -61,13 +59,10 @@ class mowing:
       for j in range(0,8):
         sense.set_pixel(i,j, self.grassColor)
     for i in range(self.count):
-      sense.set_pixel(random.randint()*8, random.randint()*8, self.rockColor)
+      sense.set_pixel(random.randint(0,7), random.randint(0,7), self.rockColor)
    
 
-print("yes")
 sense = SenseHat()
 sense.clear()
-print(sense)
 mowing = mowing(sense)
-
 mowing.lawnMower()
