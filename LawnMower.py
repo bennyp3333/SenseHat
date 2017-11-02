@@ -69,8 +69,8 @@ class mowing:
     sense.show_message("Game has Ended", scroll_speed = 0.0001)
   
   def createField(self):
-    for i in range(0,8):
-      for j in range(0,8):
+    for i in range(self.xMax+1):
+      for j in range(self.yMax+1):
         sense.set_pixel(i,j, self.grassColor)
     
     rockList = []
