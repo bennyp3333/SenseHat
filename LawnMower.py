@@ -3,8 +3,8 @@ import random
 import time
   
 # max rgb values are [248,252,248]
-
 class mowing:
+  
   def __init__(self, sense):
     self.sense = sense
     self.count = 4 #temporary
@@ -12,7 +12,7 @@ class mowing:
     self.grassColor = [0,252,0]
     self.rockColor = [168,152,136]
     self.explodeColor = [248,100,0]
-    self.xMax, self.yMax = 7, 7
+    self.xMax, self.yMax = 7, 7 #could set to parameters
     self.availPoints = (self.xMax+1)*(self.yMax+1)
     self.loX, self.loY = 0, self.xMax
     self.lastX, self.lastY = self.loX, self.loY
@@ -94,22 +94,22 @@ class mowing:
   
   def explode(self):
     radius = [self.loX, self.loY]
-    exXLoc, exYLoc = [radius[0]], [radius[1]]
+    exploXLoc, exploYLoc = [radius[0]], [radius[1]]
     
     if radius[0]-1 >= 0:
-      exXLoc.append(radius[0]-1)
+      exploXLoc.append(radius[0]-1)
       
     if radius[0]+1 <= self.xMax:
-      exXLoc.append(radius[0]+1)
+      exploXLoc.append(radius[0]+1)
       
     if radius[1]-1 >= 0:  
-      exYLoc.append(radius[1]-1)
+      exploYLoc.append(radius[1]-1)
       
     if radius[1]+1 <= self.yMax:
-       exYLoc.append(radius[1]+1)
+       exploYLoc.append(radius[1]+1)
     
-    for i in exXLoc:
-      for j in exYLoc:
+    for i in exploXLoc:
+      for j in exploYLoc:
         if (radius[0]!=i or radius[1]!=j):
           sense.set_pixel(i, j, self.explodeColor)
         
