@@ -20,10 +20,12 @@ def lawnMower():
   sense.set_pixel(loX, loY, [248, 0, 32])
   
   while(True):
+    x = 0
+    y = 0
     orient = sense.get_orientation()
     x = orient["pitch"]
     y = orient["roll"]
-    
+    print("pitch {0}        roll {1}".format(x, y))
     if (y > moveThresh and y < 180 and loY < 7):
       if(sense.get_pixel(loX, loY+1)==grassColor):
         points+=1
@@ -32,6 +34,8 @@ def lawnMower():
       if(sense.get_pixel(loX, loY-1)==grassColor):
         points+=1
       loY = lastY-1
+    else:
+        print("no Y change")
     if (x > moveThresh and x < 180 and loX > 0):
       if(sense.get_pixel(loX-1, loY)==grassColor):
         points+=1
@@ -40,6 +44,8 @@ def lawnMower():
       if(sense.get_pixel(loX+1, loY)==grassColor):
         points+=1
       loX = lastX+1
+    else:
+        print("no X change")
       
     sense.set_pixel(lastX, lastY, [2, 252, 119])
     lastX = loX
