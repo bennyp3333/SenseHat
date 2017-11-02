@@ -9,17 +9,17 @@ class mowing:
     self.sense = sense
     self.count = 4 #temporary
     self.moveThresh = 30
+    self.availPoints = 0
     self.grassColor = [0,252,0]
     self.rockColor = [168,152,136]
     self.explodeColor = [248,100,0]
     self.xMax, self.yMax = 7, 7 #could set to parameters
-    self.availPoints = (self.xMax+1)*(self.yMax+1)
     self.loX, self.loY = 0, self.xMax
     self.lastX, self.lastY = self.loX, self.loY
     
   def lawnMower(self):
     temp = sense.get_temperature()
-    self.createField()
+    self.newRound()
     points = 0
     sense.set_pixel(self.loX, self.loY, [248, 2, 36])
     
@@ -62,7 +62,9 @@ class mowing:
       sense.set_pixel(self.loX, self.loY, [248, 2, 36])
       
       if points == self.availPoints:
-        self.winRound()
+        sense.show_message("You Won! Next Round", scroll_speed = 0.0000001)
+        points = 0
+        self.newRound()
       
       time.sleep(1)
       
@@ -114,8 +116,7 @@ class mowing:
           sense.set_pixel(i, j, self.explodeColor)
         
 
-  def winRound(self):
-    sense.show_message("You Won! Next Round", scroll_speed = 0.0000001)
+  def newRound(self):
     self.count+=1
     self.availPoints = (self.xMax+1)*(self.yMax+1)
     self.createField()
