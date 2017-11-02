@@ -3,23 +3,23 @@ import random
 import time
   
 # max rgb values are [248,252,248]
+
 class mowing:
-  
   def __init__(self, sense):
     self.sense = sense
-    self.count = 0 #temporary
+    self.count = 4 #temporary
     self.moveThresh = 30
-    self.availPoints = 64
     self.grassColor = [0,252,0]
     self.rockColor = [168,152,136]
     self.explodeColor = [248,100,0]
-    self.loX, self.lastX, self.loY, self.lastY = 0, 0, 7, 7
+    self.xMax, self.yMax = 7, 7
+    self.availPoints = (self.xMax+1)*(self.yMax+1)
+    self.loX, self.loY = 0, self.xMax
+    self.lastX, self.lastY = self.loX, self.loY
     
   def lawnMower(self):
-    
     temp = sense.get_temperature()
     self.createField()
-    
     points = 0
     sense.set_pixel(self.loX, self.loY, [248, 2, 36])
     
@@ -28,56 +28,45 @@ class mowing:
       x = orient["pitch"]
       y = orient["roll"]
       
-      if (y > self.moveThresh and y < 180 and self.loY < 7):
-        if(sense.get_pixel(self.loX, self.loY+1)==self.grassColor):
+      if y > self.moveThresh and y < 180 and self.loY < self.xMax:
+        if sense.get_pixel(self.loX, self.loY+1)==self.grassColor:
           points+=1
-          print("yes")
-        elif(sense.get_pixel(self.loX, self.loY+1)==self.rockColor):
-          print("got here")
+        elif sense.get_pixel(self.loX, self.loY+1)==self.rockColor:
           self.lose()
           break
         self.loY = self.lastY+1
-      elif(y < 360 - self.moveThresh and y > 180 and self.loY > 0):
-        if(sense.get_pixel(self.loX, self.loY-1)==self.grassColor):
+      elif y < 360 - self.moveThresh and y > 180 and self.loY > 0:
+        if sense.get_pixel(self.loX, self.loY-1)==self.grassColor:
           points+=1
-          print("yes")
-        elif(sense.get_pixel(self.loX, self.loY-1)==self.rockColor):
-          print("got here")
+        elif sense.get_pixel(self.loX, self.loY-1)==self.rockColor:
           self.lose()
           break
         self.loY = self.lastY-1
-      if (x > self.moveThresh and x < 180 and self.loX > 0):
-        if(sense.get_pixel(self.loX-1, self.loY)==self.grassColor):
+      if x > self.moveThresh and x < 180 and self.loX > 0:
+        if sense.get_pixel(self.loX-1, self.loY)==self.grassColor:
           points+=1
-          print("yes")
-        elif(sense.get_pixel(self.loX-1, self.loY)==self.rockColor):
-          print("got here")
+        elif sense.get_pixel(self.loX-1, self.loY)==self.rockColor:
           self.lose()
           break
         self.loX = self.lastX-1
-      elif (x < 360 - self.moveThresh and x > 180 and self.loX < 7):
-        if(sense.get_pixel(self.loX+1, self.loY)==self.grassColor):
+      elif x < 360 - self.moveThresh and x > 180 and self.loX < self.yMax:
+        if sense.get_pixel(self.loX+1, self.loY)==self.grassColor:
           points+=1
-          print("yes")
-        elif(sense.get_pixel(self.loX+1, self.loY)==self.rockColor):
-          print("got here")
+        elif sense.get_pixel(self.loX+1, self.loY)==self.rockColor:
           self.lose()
           break
         self.loX = self.lastX+1
         
       sense.set_pixel(self.lastX, self.lastY, [2, 252, 119])
-      self.lastX = self.loX
-      self.lastY = self.loY
+      self.lastX, self.lastY = self.loX, self.loY
       sense.set_pixel(self.loX, self.loY, [248, 2, 36])
-      if(points == self.availPoints):
-        sense.show_message("You Won! Next Round", scroll_speed = 0.0000001)
-        self.count+=1
-        self.createField()
-      #print(points)
-      #print(x, y, temp)
+      
+      if points == self.availPoints:
+        
       
       time.sleep(1)
-    
+      
+    sense.show_message("Game has Ended", scroll_speed = 0.0001)
   
   def createField(self):
     for i in range(0,8):
@@ -89,8 +78,7 @@ class mowing:
       sameRock = True #just to initialize to get into while loop
       while (sameRock == True):
         sameRock = False
-        rockLoc = [random.randint(0,7), random.randint(0,7)]
-        #print(len(rockList), i)
+        rockLoc = [random.randint(0,self.xMax), random.randint(0,self.yMax)]
         for j in range(len(rockList)):
           #print("x", rockLoc[0], rockList[j][0])
           #print("y", rockLoc[1], rockList[j][1])
@@ -101,26 +89,23 @@ class mowing:
         if sameRock == False:
           rockList.append(rockLoc) 
       
-      self.availPoints-=1  
       sense.set_pixel(rockList[i][0], rockList[i][1], self.rockColor)
-      print(sense.get_pixel(rockList[i][0], rockList[i][1]))
+      self.availPoints-=1
   
   def explode(self):
     radius = [self.loX, self.loY]
-    exXLoc, exYLoc = [], []
+    exXLoc, exYLoc = [radius[0]], [radius[1]]
     
-    exXLoc.append(radius[0])
-    exYLoc.append(radius[1])
-    if(radius[0]-1 > 0):
+    if radius[0]-1 >= 0:
       exXLoc.append(radius[0]-1)
       
-    if(radius[0]+1 < 7):
+    if radius[0]+1 <= self.xMax:
       exXLoc.append(radius[0]+1)
       
-    if(radius[1]-1 > 0):  
+    if radius[1]-1 >= 0:  
       exYLoc.append(radius[1]-1)
       
-    if(radius[1]+1 < 7):
+    if radius[1]+1 <= self.yMax:
        exYLoc.append(radius[1]+1)
     
     for i in exXLoc:
@@ -128,11 +113,18 @@ class mowing:
         if (radius[0]!=i or radius[1]!=j):
           sense.set_pixel(i, j, self.explodeColor)
         
+
+  def winRound(self):
+    sense.show_message("You Won! Next Round", scroll_speed = 0.0000001)
+    self.count+=1
+    self.availPoints = (self.xMax+1)*(self.yMax+1)
+    self.createField()
         
   def lose(self):
     self.explode()
-    time.sleep(5)
-    sense.show_message("You crashed into a rock and the lawnmower exploded. You Lose :(", scroll_speed=0.00000001)
+    time.sleep(4)
+    sense.show_message("You crashed into a rock and exploded. You Lose :(", scroll_speed=0.00000001)
+
 sense = SenseHat()
 sense.clear()
 mowing = mowing(sense)
