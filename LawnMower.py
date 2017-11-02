@@ -62,7 +62,7 @@ class mowing:
       sense.set_pixel(self.loX, self.loY, [248, 2, 36])
       
       if points == self.availPoints:
-        
+        self.winRound()
       
       time.sleep(1)
       
