@@ -2,6 +2,7 @@ from sense_hat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
 from signal import pause
 import time
 import os
+import pygame
 
 R = [255, 0, 0]  # Red
 O = [255, 128, 0]  # orange
@@ -84,6 +85,8 @@ def refresh():
     sense.set_pixel(x, y, 255, 255, 255)
     print("X:{0}    Y:{1}".format(x, y))
 refresh()
+pygame.init()
+pygame.mixer.music.load('Mouse_click_sound_effect_2[Mp3Converter.net].wav')
 while(True):  
     for event in sense.stick.get_events():
         if((event.action == 'pressed' or event.action == 'held') and event.direction == 'down'):
@@ -95,16 +98,17 @@ while(True):
         if((event.action == 'pressed' or event.action == 'held') and event.direction == 'left'):
             x = clamp(x - 1)
         if(event.action == 'pressed' and event.direction == 'middle'):
+            pygame.mixer.music.play()
             if(x < 2 and y > 6):
                 state = 'menu'
             elif(x == 1 and y == 1 and state == 'screen'):#game1
-                os.system("python game1.py")
+                os.system("python LawnMower.py")
             elif(x == 1 and y == 3 and state == 'screen'):#game2
-                os.system("python game2.py")
+                os.system("game2.py")
             elif(x == 1 and y == 5 and state == 'screen'):#game3
-                os.system("python game3.py")
+                os.system("game3.py")
             elif(x == 3 and y == 1 and state == 'screen'):#game4
-                os.system("python game4.py")
+                os.system("game4.py")
             elif(x == 1 and y == 4 and state == 'menu'):#files
                 state = 'files'
             elif(x == 0 and y == 3 and state == 'menu'):#profile
