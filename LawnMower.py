@@ -3,6 +3,7 @@ import random
 import time
   
 # max rgb values are [248,252,248]
+ss = 0.06
 class mowing:
   
   def __init__(self, sense):
@@ -62,13 +63,13 @@ class mowing:
       sense.set_pixel(self.loX, self.loY, [248, 2, 36])
       
       if points == self.availPoints:
-        sense.show_message("You Won! Next Round", scroll_speed = 0.01)
+        sense.show_message("You Won! Next Round", scroll_speed = ss)
         points = 0
         self.newRound()
       
       time.sleep(1)
       
-    sense.show_message("Game has Ended, you got a Score of " + points, scroll_speed = 0.01)
+    sense.show_message("Game has Ended, you got a Score of " + points, scroll_speed = ss)
   
   def createField(self):
     for i in range(self.xMax+1):
@@ -124,7 +125,7 @@ class mowing:
   def lose(self):
     self.explode()
     time.sleep(4)
-    sense.show_message("You crashed into a rock and exploded. You Lose :(", scroll_speed=0.01)
+    sense.show_message("You crashed into a rock and exploded. You Lose :(", scroll_speed=ss)
 
 sense = SenseHat()
 sense.clear()
