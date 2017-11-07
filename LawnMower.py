@@ -62,13 +62,13 @@ class mowing:
       sense.set_pixel(self.loX, self.loY, [248, 2, 36])
       
       if points == self.availPoints:
-        sense.show_message("You Won! Next Round", scroll_speed = 0.0000001)
+        sense.show_message("You Won! Next Round", scroll_speed = 0.01)
         points = 0
         self.newRound()
       
       time.sleep(1)
       
-    sense.show_message("Game has Ended", scroll_speed = 0.0001)
+    sense.show_message("Game has Ended, you got a Score of " + points, scroll_speed = 0.01)
   
   def createField(self):
     for i in range(self.xMax+1):
