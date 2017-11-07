@@ -21,9 +21,9 @@ class Missile:
 
   def __init__(self, ship):
     if ship.enemy==False: #assume enemies will attack down
-      self.modify = 1
-    else:
       self.modify = -1
+    else:
+      self.modify = 1
     self.ship = ship
     self.locX, self.locY = ship.locX, ship.locY+self.modify
     self.lastX, self.lastY = self.locX, self.locY
@@ -52,10 +52,10 @@ while(True):
     elif (command.action == "pressed" and command.direction == "right" and ship.locX < xMax):
       print("blah")
       ship.locX+=1
-    elif (command.action == "pressed" and command.direction == "middle"):
+    elif (command.action == "pressed" and command.direction == "up"):
       print("yes")
       missileList.append(ship.fire())
-      curMiss = missileList[len(missileList)]
+      curMiss = missileList[len(missileList)-1]
       sense.set_pixel(curMiss.locX, curMiss.locY, Missile.color)
       
     
