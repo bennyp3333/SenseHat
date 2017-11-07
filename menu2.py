@@ -104,11 +104,11 @@ while(True):
             elif(x == 1 and y == 1 and state == 'screen'):#game1
                 os.system("python LawnMower.py")
             elif(x == 1 and y == 3 and state == 'screen'):#game2
-                os.system("game2.py")
+                os.system("python game2.py")
             elif(x == 1 and y == 5 and state == 'screen'):#game3
                 os.system("python frogger.py")
             elif(x == 3 and y == 1 and state == 'screen'):#game4
-                os.system("game4.py")
+                os.system("python game4.py")
             elif(x == 1 and y == 4 and state == 'menu'):#files
                 state = 'files'
             elif(x == 0 and y == 3 and state == 'menu'):#profile
