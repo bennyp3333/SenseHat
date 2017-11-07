@@ -28,45 +28,60 @@ class Missile:
     self.locX, self.locY = ship.locX, ship.locY+self.modify
     self.lastX, self.lastY = self.locX, self.locY
     
-    
-spaceColor = [10,10,10]
-xMin, xMax, yMin, yMax = 0, 7, 0, 7
+def shift(sense, item, spaceColor):
+  sense.set_pixel(item.lastX, item.lastY, spaceColor)
+  item.lastX, item.lastY = item.locX, item.locY
+  sense.set_pixel(item.locX, item.locY, item.color)
 
-missileList = []
-ship = SpaceShip(xMax, yMax, False)
-sense = SenseHat()
-
-for i in range(xMax+1):
-  for j in range(yMax+1):
-    sense.set_pixel(i, j, spaceColor)
-    
-sense.set_pixel(ship.locX, ship.locY, ship.color)
-
-while(True):
-  for command in sense.stick.get_events():
-  #using held breaks so far
-    print(command.direction)
-    if (command.action == "pressed" and command.direction == "left" and ship.locX > xMin):
-      print("yes")
-      ship.locX-=1
-    elif (command.action == "pressed" and command.direction == "right" and ship.locX < xMax):
-      print("blah")
-      ship.locX+=1
-    elif (command.action == "pressed" and command.direction == "up"):
-      print("yes")
-      missileList.append(ship.fire())
-      curMiss = missileList[len(missileList)-1]
-      sense.set_pixel(curMiss.locX, curMiss.locY, Missile.color)
-      
-    
-    time.sleep(0.1)
-      
-      
-  sense.set_pixel(ship.lastX, ship.lastY, spaceColor)
-  ship.lastX, ship.lastY = ship.locX, ship.locY
-  sense.set_pixel(ship.locX, ship.locY, ship.color)
-  #print("got here")
+def main():      
+  spaceColor = [10,10,10]
+  xMin, xMax, yMin, yMax = 0, 7, 0, 7
   
+  missileList = []
+  ship = SpaceShip(xMax, yMax, False)
+  sense = SenseHat()
+  
+  for i in range(xMax+1):
+    for j in range(yMax+1):
+      sense.set_pixel(i, j, spaceColor)
+      
+  sense.set_pixel(ship.locX, ship.locY, ship.color)
+  
+  while(True):
+    for command in sense.stick.get_events():
+    #using held breaks so far
+      print(command.direction)
+      if (command.action == "pressed" and command.direction == "left" and ship.locX > xMin):
+        print("yes")
+        ship.locX-=1
+      elif (command.action == "pressed" and command.direction == "right" and ship.locX < xMax):
+        print("blah")
+        ship.locX+=1
+      elif (command.action == "pressed" and command.direction == "up"):
+        print("yes")
+        missileList.append(ship.fire())
+        curMiss = missileList[len(missileList)-1]
+        sense.set_pixel(curMiss.locX, curMiss.locY, Missile.color)
+        
+      
+      time.sleep(0.1)
+        
     
-  time.sleep(0.4)
+    for missile in missileList: #need to set bounds
+      if missile.locX-1 > xMin and missile.locX+1 < xMax:
+        missile.locY+=missile.modify
+      shift(sense, missile, spaceColor)
+      
+        
+    shift(sense,ship, spaceColor)
+    #sense.set_pixel(ship.lastX, ship.lastY, spaceColor)
+    #ship.lastX, ship.lastY = ship.locX, ship.locY
+    #sense.set_pixel(ship.locX, ship.locY, ship.color)
+    #print("got here")
     
+      
+    time.sleep(1)
+    
+    
+main()
+      
