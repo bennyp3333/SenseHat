@@ -124,7 +124,7 @@ class mowing:
   def lose(self):
     self.explode()
     time.sleep(4)
-    sense.show_message("You crashed into a rock and exploded. You Lose :(", scroll_speed=0.00000001)
+    sense.show_message("You crashed into a rock and exploded. You Lose :(", scroll_speed=0.01)
 
 sense = SenseHat()
 sense.clear()
