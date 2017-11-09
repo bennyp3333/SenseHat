@@ -14,9 +14,9 @@ def frogger():
   L = [128, 255, 0]  # Lime?
   
   G = [0, 255, 0]  # Green
-  S = [0, 255, 128]  # Spring Green?
+  S = [0, 252, 128]  # Spring Green?
   C = [0, 255, 255]  # Cyan
-  I = [0, 128, 255]  # Light Blue, Indigo?
+  I = [0, 128, 248]  # Light Blue, Indigo?
   
   B = [0, 0, 255]  # Blue
   P = [127, 0, 255]  # Purple
@@ -39,6 +39,7 @@ def frogger():
   for i in range(0,8):
     for j in range(0,8):
       sense.set_pixels(bg)
+  sense.set_pixel(0, 7, S)
   while True:
     for event in sense.stick.get_events():
         sense.set_pixel(x, y, S)
@@ -58,5 +59,5 @@ def frogger():
           lastx = x
           x -= 1
           sense.set_pixel(lastx, y, bg[xy(lastx, y)])
-        print(sense.get_pixel(2,3))
+        print(sense.get_pixel(0,7))
 frogger()
