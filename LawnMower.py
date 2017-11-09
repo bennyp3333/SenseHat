@@ -63,21 +63,13 @@ class mowing:
       sense.set_pixel(self.loX, self.loY, [248, 2, 36])
       
       if points == self.availPoints:
-<<<<<<< HEAD
-        sense.show_message("You Won! Next Round", scroll_speed = ss)
-=======
         sense.show_message("You Won! Next Round")
->>>>>>> 98ac8dbceba453fc539e35714728cca7d0f04509
         points = 0
         self.newRound()
       
       time.sleep(1)
       
-<<<<<<< HEAD
-    sense.show_message("Game has Ended, you got a Score of " + points, scroll_speed = ss)
-=======
     sense.show_message("Game has Ended, you got a Score of " + points)
->>>>>>> 98ac8dbceba453fc539e35714728cca7d0f04509
   
   def createField(self):
     for i in range(self.xMax+1):
@@ -133,11 +125,7 @@ class mowing:
   def lose(self):
     self.explode()
     time.sleep(4)
-<<<<<<< HEAD
-    sense.show_message("You crashed into a rock and exploded. You Lose :(", scroll_speed=ss)
-=======
     sense.show_message("You crashed into a rock and exploded. You Lose :(")
->>>>>>> 98ac8dbceba453fc539e35714728cca7d0f04509
 
 sense = SenseHat()
 sense.clear()
