@@ -32,23 +32,33 @@ class Missile:
 def shift(sense, item, spaceColor):
   sense.set_pixel(item.lastX, item.lastY, spaceColor)
   item.lastX, item.lastY = item.locX, item.locY
-  sense.set_pixel(item.locX, item.locY, item.color)
+  sense.set_pixel
+  
+def collision(missiles, fighters):
+  hitList = []
+  for missile in missles:
+    moveCheck = missile.locY+missile.modify
+    for ship in fighters:
+      if ship.locX == missile.locX and ship.locY == moveCheck:
+        hitList.append(ship)
+    
 
 def main():      
   spaceColor = [20,20,20]
   xMin, xMax, yMin, yMax = 0, 7, 0, 7
   
+  fighters = []
   missileList = []
   ship = SpaceShip(int((xMax)/2), yMax, False)
+  fighters.append(ship) #first index always player
   sense = SenseHat()
   
-  enemyList = []
   for i in range(5):
     randX, randY = random.randint(xMin+1, xMax-1), random.randint(yMin+1, yMax-2)
     curMon = SpaceShip(randX, randY, True)
     print "yes", curMon.locX, curMon.locY
     #sense.set_pixel(curMon.locX, curMon.locY, [0,252,0])
-    enemyList.append(curMon)
+    fighters.append(curMon)
   
   for i in range(xMax+1):
     for j in range(yMax+1):
@@ -72,8 +82,8 @@ def main():
           ship.locX+=1
         elif event.direction == "up":
           print "yes"
-          missileList.append(ship.fire())
-          curMiss = missileList[len(missileList)-1]
+          curMiss = ship.fire()
+          missileList.append(curMiss)
           sense.set_pixel(curMiss.locX, curMiss.locY, Missile.color)
           
       elif event.action == "held":
