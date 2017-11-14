@@ -11,20 +11,21 @@ class SpaceShip:
     self.locX, self.locY = xStart, yStart
     self.lastX, self.lastY = self.locX, self.locY
     self.color = [248, 252, 248]
-    self.hp = 10*int(0.5*mult)
+    self.hp = 10*(int(0.5*mult)+1)
     
-  def fire(self):
-    return Missile(self)
+  def fire(self, damage): #damage as parameter temporary
+    return Missile(self, damage)
 
 class Missile:
   
   color = [248, 252, 248]
 
-  def __init__(self, ship):
+  def __init__(self, ship, damage):
     if ship.enemy==False: #assume enemies will attack down
       self.modify = -1
     elif ship.enemy==True:
       self.modify = 1
+    self.damage = damage
     self.ship = ship
     self.locX, self.locY = ship.locX, ship.locY+self.modify
     self.lastX, self.lastY = self.locX, self.locY
@@ -41,9 +42,9 @@ def collision(missiles, fighters): #checks if missile hits
     moveCheck = missile.locY+missile.modify
     for ship in fighters:
       if ship.locX == missile.locX and ship.locY == moveCheck:
-        hit_info = [ship,missile]
-        print(hit_info[0].enemy)
-        hit_list.append(ship)
+        hit_info = [ship, missile]
+        #print(hit_info[0].hp)
+        hit_list.append(hit_info)
   
   return hit_list
 
@@ -62,6 +63,7 @@ def main():
     curShip = SpaceShip(randX, randY, True, 1)
     #print ("yes", curShip.locX, curShip.locY)
     sense.set_pixel(curShip.locX, curShip.locY, [0,252,0])
+    #print(curShip.hp)
     fighters.append(curShip)
   
   for i in range(xMax+1):
@@ -83,7 +85,7 @@ def main():
           fighters[0].locX+=1
         elif event.direction == "up":
           print ("yes")
-          curMiss = fighters[0].fire()
+          curMiss = fighters[0].fire(5)
           missileList.append(curMiss)
           sense.set_pixel(curMiss.locX, curMiss.locY, Missile.color)
           
@@ -107,7 +109,11 @@ def main():
         missileList.remove(missile)
         
     for hit_info in collision(missileList, fighters):
-      print(hit_info[0].enemy, hit_info[1])
+      print(hit_info[0].hp, hit_info[1].damage)
+      hit_info[0].hp -= hit_info[1].damage
+      #missileList.remove(hit_info[1])
+      if hit_info.hp <= 0:
+        fighters.remove(hit_info[0])
     
     #sense.set_pixel(ship.lastX, ship.lastY, spaceColor)
     #ship.lastX, ship.lastY = ship.locX, ship.locY
