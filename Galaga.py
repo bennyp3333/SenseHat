@@ -81,13 +81,13 @@ def main():
       #print(command.direction)
       if event.action == 'pressed':
         if event.direction == 'left' and fighters[0].x_loc > x_min:
-          print('yesl')
+          #print('yesl')
           fighters[0].x_loc-=1
         elif event.direction == 'right' and fighters[0].x_loc < x_max:
-          print ('blah')
+          #print ('blah')
           fighters[0].x_loc+=1
         elif event.direction == 'up':
-          print ('yes')
+          #print ('yes')
           curMiss = fighters[0].fire(5)
           missile_list.append(curMiss)
           sense.set_pixel(curMiss.x_loc, curMiss.y_loc, Missile.color)
@@ -98,10 +98,10 @@ def main():
       
       shift(sense, fighters[0], space_color)  
     
-    time.sleep(0.1)
+    time.sleep(0.01)
     count+=1
       
-    if count==5:
+    if count==50:
       count = 0
       for ship in enemies: #moves the enemie ships
         #print(ship.enemy, ship.x_loc, ship.y_loc)
@@ -120,9 +120,14 @@ def main():
         hit_info[0].hp -= hit_info[1].damage
         missile_list.remove(hit_info[1])
         if hit_info[0].hp <= 0:
-          if hit_info[0].enemy == True:
-            enemies.remove(hit_info[0])
-          fighters.remove(hit_info[0])
+          try:
+            fighters.remove(hit_info[0])
+            if hit_info[0].enemy == True:
+              enemies.remove(hit_info[0])
+          except:
+            print('yes')
+          sense.set_pixel(hit_info[0].x_loc, hit_info[0].y_loc, hit_info[1].color)
+          time.sleep(0.1)
           sense.set_pixel(hit_info[0].x_loc, hit_info[0].y_loc, space_color)
       
     #sense.set_pixel(ship.last_x, ship.last_y, space_color)
