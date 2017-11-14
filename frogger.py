@@ -14,7 +14,7 @@ def frogger():
   L = [128, 255, 0]  # Lime?
   
   G = [0, 255, 0]  # Green
-  S = [0, 252, 128]  # Spring Green?
+  S = [0, 100, 0]  # Dark Green
   C = [0, 255, 255]  # Cyan
   I = [0, 128, 248]  # Light Blue, Indigo?
   
@@ -39,11 +39,15 @@ def frogger():
   for i in range(0,8):
     for j in range(0,8):
       sense.set_pixels(bg)
-  sense.set_pixel(0, 7, S)
+  sense.set_pixel(0, 7, P)
   while True:
     for event in sense.stick.get_events():
-        sense.set_pixel(x, y, S)
-        if event.action == 'pressed' and event.direction == 'up' and y>0 and sense.get_pixel(x, y-1) != I:
+        sense.set_pixel(x, y, P)
+        if event.action == 'pressed' and event.direction == 'up' and y>0:
+          if sense.get_pixel(x, y-1) == I:
+            frogger()
+          if y-1==0:
+            frogger()
           lasty = y
           y -= 1
           sense.set_pixel(x, lasty, bg[xy(x, lasty)])
@@ -51,13 +55,16 @@ def frogger():
           lasty = y
           y += 1
           sense.set_pixel(x, lasty, bg[xy(x, lasty)])
-        if event.action == 'pressed' and event.direction == 'right' and x<7 and sense.get_pixel(x+1, y) != I:
+        if event.action == 'pressed' and event.direction == 'right' and x<7:
+          if sense.get_pixel(x+1, y) == I:
+            frogger()
           lastx = x
           x += 1
           sense.set_pixel(lastx, y, bg[xy(lastx, y)])
-        if event.action == 'pressed' and event.direction == 'left' and x>0 and sense.get_pixel(x-1, y) != I:
+        if event.action == 'pressed' and event.direction == 'left' and x>0:
+          if sense.get_pixel(x-1, y) == I:
+            frogger()
           lastx = x
           x -= 1
           sense.set_pixel(lastx, y, bg[xy(lastx, y)])
-        print(sense.get_pixel(0,7))
 frogger()
