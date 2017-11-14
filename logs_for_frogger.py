@@ -4,16 +4,22 @@ import random
 sense = SenseHat()
 
 I = [0, 128, 248]
-L = [139, 69, 19]
+L = [139, 68, 16]
 
 class log:
   def __init__(self, logy):
     self.logy = logy
     self.logx = random.randrange(-30,0)
   def moveLog(self):
+    rand = random.randrange(1,10)
     if self.logx > -1 and self.logx < 8:
-      sense.set_pixel(self.logx, self.logy, L)
+      if rand<6:
+        sense.set_pixel(self.logx, self.logy, L)
+      else:
+        sense.set_pixel(self.logx, self.logy, I)
     self.logx += 1
+    if self.logx > 8:
+      self.logx = random.randrange(-30,0)
 def logs():
   log1 = log(2)
   log2 = log(3)
