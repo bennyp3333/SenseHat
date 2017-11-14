@@ -6,10 +6,10 @@ import time
 
 class SpaceShip:
   
-  def __init__(self, xStart, yStart, enemy, mult):
+  def __init__(self, x_start, y_start, enemy, mult):
     self.enemy = enemy
-    self.locX, self.locY = xStart, yStart
-    self.lastX, self.lastY = self.locX, self.locY
+    self.x_loc, self.y_loc = x_start, y_start
+    self.last_x, self.last_y = self.x_loc, self.y_loc
     self.color = [248, 252, 248]
     self.hp = 10*(int(0.5*mult)+1)
     
@@ -27,21 +27,21 @@ class Missile:
       self.modify = 1
     self.damage = damage
     self.ship = ship
-    self.locX, self.locY = ship.locX, ship.locY+self.modify
-    self.lastX, self.lastY = self.locX, self.locY
+    self.x_loc, self.y_loc = ship.x_loc, ship.y_loc+self.modify
+    self.last_x, self.last_y = self.x_loc, self.y_loc
     
     
-def shift(sense, item, spaceColor):
-  sense.set_pixel(item.lastX, item.lastY, spaceColor)
-  item.lastX, item.lastY = item.locX, item.locY
-  sense.set_pixel(item.locX, item.locY, [0, 252, 0])
+def shift(sense, item, space_color):
+  sense.set_pixel(item.last_x, item.last_y, space_color)
+  item.last_x, item.last_y = item.x_loc, item.y_loc
+  sense.set_pixel(item.x_loc, item.y_loc, [0, 252, 0])
   
 def collision(missiles, fighters): #checks if missile hits
   hit_list = []
   for missile in missiles:
-    moveCheck = missile.locY+missile.modify
+    #moveCheck = missile.y_loc+missile.modify
     for ship in fighters:
-      if ship.locX == missile.locX and ship.locY == moveCheck:
+      if ship.x_loc == missile.x_loc and ship.y_loc == missile.y_loc:
         hit_info = [ship, missile]
         #print(hit_info[0].hp)
         hit_list.append(hit_info)
@@ -49,7 +49,7 @@ def collision(missiles, fighters): #checks if missile hits
   return hit_list
 
 def main():      
-  spaceColor = [20,20,20]
+  space_color = [20,20,20]
   xMin, xMax, yMin, yMax = 0, 7, 0, 7
   
   fighters = []
@@ -61,63 +61,64 @@ def main():
   for i in range(5):
     randX, randY = random.randint(xMin+1, xMax-1), random.randint(yMin+1, yMax-2)
     curShip = SpaceShip(randX, randY, True, 1)
-    #print ("yes", curShip.locX, curShip.locY)
-    sense.set_pixel(curShip.locX, curShip.locY, [0,252,0])
+    #print ("yes", curShip.x_loc, curShip.y_loc)
+    sense.set_pixel(curShip.x_loc, curShip.y_loc, [0,252,0])
     #print(curShip.hp)
     fighters.append(curShip)
   
   for i in range(xMax+1):
     for j in range(yMax+1):
-      sense.set_pixel(i, j, spaceColor)
+      sense.set_pixel(i, j, space_color)
       
-  #sense.set_pixel(ship.locX, ship.locY, ship.color)
-  #shift(sense, ship, spaceColor)
+  #sense.set_pixel(ship.x_loc, ship.y_loc, ship.color)
+  #shift(sense, ship, space_color)
     
   while(True):
     for event in sense.stick.get_events(): #using held breaks so far
       #print(command.direction)
       if event.action == "pressed":
-        if event.direction == "left" and ship.locX > xMin:
+        if event.direction == "left" and ship.x_loc > xMin:
           print("yesl")
-          fighters[0].locX-=1
-        elif event.direction == "right" and ship.locX < xMax:
+          fighters[0].x_loc-=1
+        elif event.direction == "right" and ship.x_loc < xMax:
           print ("blah")
-          fighters[0].locX+=1
+          fighters[0].x_loc+=1
         elif event.direction == "up":
           print ("yes")
           curMiss = fighters[0].fire(5)
           missileList.append(curMiss)
-          sense.set_pixel(curMiss.locX, curMiss.locY, Missile.color)
+          sense.set_pixel(curMiss.x_loc, curMiss.y_loc, Missile.color)
           
       elif event.action == "held":
         print ('held')
         break
       
-      #shift(sense,ship, spaceColor)  
+      #shift(sense,ship, space_color)  
       #time.sleep(0.1)
       
     for ship in fighters: #moves the ships
-      #print(ship.enemy, ship.locX, ship.locY)
-      shift(sense, ship, spaceColor)
+      #print(ship.enemy, ship.x_loc, ship.y_loc)
+      shift(sense, ship, space_color)
       
     for missile in missileList: #moves the missiles
-      if missile.locY-1 >= yMin and missile.locY+1 <= yMax:
-        missile.locY+=missile.modify
-        shift(sense, missile, spaceColor)
+      if missile.y_loc-1 >= yMin and missile.y_loc+1 <= yMax:
+        missile.y_loc+=missile.modify
+        shift(sense, missile, space_color)
       else:
-        sense.set_pixel(missile.locX, missile.locY, spaceColor)
+        sense.set_pixel(missile.x_loc, missile.y_loc, space_color)
         missileList.remove(missile)
         
     for hit_info in collision(missileList, fighters):
       print(hit_info[0].hp, hit_info[1].damage)
       hit_info[0].hp -= hit_info[1].damage
-      #missileList.remove(hit_info[1])
-      if hit_info.hp <= 0:
+      missileList.remove(hit_info[1])
+      if hit_info[0].hp <= 0:
         fighters.remove(hit_info[0])
+        sense.set_pixel(hit_info[0].x_loc, hit_info[0].y_loc, space_color)
     
-    #sense.set_pixel(ship.lastX, ship.lastY, spaceColor)
-    #ship.lastX, ship.lastY = ship.locX, ship.locY
-    #sense.set_pixel(ship.locX, ship.locY, ship.color)
+    #sense.set_pixel(ship.last_x, ship.last_y, space_color)
+    #ship.last_x, ship.last_y = ship.x_loc, ship.y_loc
+    #sense.set_pixel(ship.x_loc, ship.y_loc, ship.color)
     #print("got here")
     
       
