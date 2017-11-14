@@ -6,11 +6,12 @@ import time
 
 class SpaceShip:
   
-  def __init__(self, xStart, yStart, enemy): #use max and min to find start position
+  def __init__(self, xStart, yStart, enemy, mult):
     self.enemy = enemy
     self.locX, self.locY = xStart, yStart
     self.lastX, self.lastY = self.locX, self.locY
     self.color = [248, 252, 248]
+    self.hp = 10*int(0.5*mult)
     
   def fire(self):
     return Missile(self)
@@ -32,16 +33,19 @@ class Missile:
 def shift(sense, item, spaceColor):
   sense.set_pixel(item.lastX, item.lastY, spaceColor)
   item.lastX, item.lastY = item.locX, item.locY
-  sense.set_pixel(item.locX, item.locY, [255,255,255])
+  sense.set_pixel(item.locX, item.locY, [0, 252, 0])
   
-def collision(missiles, fighters):
-  hitList = []
+def collision(missiles, fighters): #checks if missile hits
+  hit_list = []
   for missile in missiles:
     moveCheck = missile.locY+missile.modify
     for ship in fighters:
       if ship.locX == missile.locX and ship.locY == moveCheck:
-        hitList.append(ship)
-    
+        hit_info = [ship,missile]
+        print(hit_info[0].enemy)
+        hit_list.append(ship)
+  
+  return hit_list
 
 def main():      
   spaceColor = [20,20,20]
@@ -49,13 +53,13 @@ def main():
   
   fighters = []
   missileList = []
-  ship = SpaceShip(int((xMax)/2), yMax, False)
+  ship = SpaceShip(int((xMax)/2), yMax, False, 1)
   fighters.append(ship) #first index always player
   sense = SenseHat()
   
   for i in range(5):
     randX, randY = random.randint(xMin+1, xMax-1), random.randint(yMin+1, yMax-2)
-    curShip = SpaceShip(randX, randY, True)
+    curShip = SpaceShip(randX, randY, True, 1)
     #print ("yes", curShip.locX, curShip.locY)
     sense.set_pixel(curShip.locX, curShip.locY, [0,252,0])
     fighters.append(curShip)
@@ -75,26 +79,26 @@ def main():
           print("yesl")
           fighters[0].locX-=1
         elif event.direction == "right" and ship.locX < xMax:
-          print "blah"
+          print ("blah")
           fighters[0].locX+=1
         elif event.direction == "up":
-          print "yes"
+          print ("yes")
           curMiss = fighters[0].fire()
           missileList.append(curMiss)
           sense.set_pixel(curMiss.locX, curMiss.locY, Missile.color)
           
       elif event.action == "held":
-        print 'held'
+        print ('held')
         break
       
       #shift(sense,ship, spaceColor)  
       #time.sleep(0.1)
       
-    for ship in fighters:
-      print(ship.enemy, ship.locX, ship.locY)
+    for ship in fighters: #moves the ships
+      #print(ship.enemy, ship.locX, ship.locY)
       shift(sense, ship, spaceColor)
       
-    for missile in missileList: #need to set bounds
+    for missile in missileList: #moves the missiles
       if missile.locY-1 >= yMin and missile.locY+1 <= yMax:
         missile.locY+=missile.modify
         shift(sense, missile, spaceColor)
@@ -102,6 +106,9 @@ def main():
         sense.set_pixel(missile.locX, missile.locY, spaceColor)
         missileList.remove(missile)
         
+    for hit_info in collision(missileList, fighters):
+      print(hit_info[0].enemy, hit_info[1])
+    
     #sense.set_pixel(ship.lastX, ship.lastY, spaceColor)
     #ship.lastX, ship.lastY = ship.locX, ship.locY
     #sense.set_pixel(ship.locX, ship.locY, ship.color)
