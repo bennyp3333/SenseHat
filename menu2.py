@@ -126,6 +126,8 @@ while(True):
                 state = 'files'
             elif(x == 0 and y == 3 and state == 'menu'):#profile
                 state = 'profile'
+            elif(x == 2 and y == 3 and state == 'files'):#picture app
+                os.system("python pictures.py")
             elif(x == 0 and y == 6 and state == 'menu'):#power button
                 sense.set_pixels(shutdown)
                 exit()
