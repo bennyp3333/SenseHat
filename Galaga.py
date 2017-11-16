@@ -79,7 +79,7 @@ def main():
   while(True):
     for event in sense.stick.get_events(): #using held breaks so far
       #print(command.direction)
-      if event.action == 'pressed':
+      if (event.action == 'pressed' or event.action == 'hold'):
         if event.direction == 'left' and fighters[0].x_loc > x_min:
           #print('yesl')
           fighters[0].x_loc-=1
