@@ -20,16 +20,6 @@ K = [0, 0, 0]  # Black
 E = [100, 100, 100]  # Grey
 W = [255, 255, 255]  # White
 
-backdrop1 = [
-K, W, K, W, K, W, W, W,
-K, W, K, W, K, W, K, K,
-K, W, W, W, K, W, W, W,
-K, K, K, W, K, K, K, W,
-K, K, K, W, K, W, W, W,
-K, K, K, K, K, K, K, K,
-K, K, K, K, K, K, K, K,
-K, K, K, K, K, K, K, K, 
-]
 screen = [
 K, K, K, K, K, K, K, K,
 K, K, K, K, K, K, K, K,
@@ -256,16 +246,76 @@ def displaytemp(first, second, color, backgroundcolor):
         n = n + 1
     sense.set_pixels(screen)
     
-def weatherpicture():
+
+sun = [
+K, K, K, K, K, K, K, K,  
+K, K, O, O, O, O, K, K,
+K, O, Y, Y, Y, Y, O, K,
+K, O, Y, Y, Y, Y, O, K,
+K, O, Y, Y, Y, Y, O, K,
+K, O, Y, Y, Y, Y, O, K,
+K, K, O, O, O, O, K, K,
+K, K, K, K, K, K, K, K
+]
+cloud = [
+K, K, K, K, K, K, K, K,
+K, K, K, K, K, K, K, K,
+K, K, K, K, O, O, K, K,
+K, K, K, O, Y, Y, O, K,
+K, K, E, W, W, Y, O, K,
+K, E, W, W, W, W, K, K,
+K, W, W, W, W, W, W, K,
+K, K, K, K, K, K, K, K, 
+]
+rain = [
+K, K, K, K, K, K, K, K,
+K, K, E, W, W, W, K, K,
+K, E, W, W, W, W, W, K,
+K, K, K, K, K, K, K, K,
+K, K, K, K, I, K, K, K,
+K, K, I, K, K, K, K, K,
+K, K, K, K, K, I, K, K,
+K, K, K, K, K, K, K, K, 
+]
+snow = [
+K, K, K, W, K, K, K, K,
+K, K, W, W, W, K, K, K,
+K, W, K, W, K, W, K, K,
+W, W, W, W, W, W, W, K,
+K, W, K, W, K, W, K, K,
+K, K, W, W, W, K, K, K,
+K, K, K, W, K, K, K, K,
+K, K, K, K, K, K, K, K, 
+]
     
+def weatherpicture(temperature):
+    if(temperature > 90):
+        sense.set_pixels(sun)
+    elif(temperature > 60):
+        sense.set_pixels(cloud)
+    elif(temperature > 30):
+        sense.set_pixels(rain)
+    elif(temperature > 0):
+        sense.set_pixels(snow)
+        
+        
+wait = 3   
         
 while(True):
-    ##temp = sense.get_temperature()
+    temp = sense.get_temperature()
+    temp = temp * 1.8 + 32
     ##sense.show_message(str(int(temp)), text_colour=R, back_colour=K, scroll_speed=0.1)
     ##eight(1,screen, R)
     ##zero(2,screen, I)
     ##sense.set_pixels(screen)
-    displaytemp(6, 9, R, C)
-    time.sleep(1.0)
-    weatherpicture()
-    time.sleep(1.0)
+    displaytemp(int(temp/10), int(temp - (10 * int(temp/10))), W, K)
+    print ("real temp: {0}     first digit: {1}    second digit: {2}  ".format(temp,int(temp/10),int(temp - (10 * int(temp/10)))))
+    ##displaytemp(6, 9, W, K)
+    time.sleep(wait)
+    ##sense.set_pixels(rain)
+    weatherpicture(temp)
+    time.sleep(wait)
+    for event in sense.stick.get_events():
+        if((event.action == 'pressed' or event.action == 'held') and event.direction == 'middle'):
+            print('fuc')
+            exit()

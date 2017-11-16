@@ -63,6 +63,16 @@ W, W, W, B, B, W, W, W,
 W, B, B, B, B, B, B, W,
 W, B, B, B, B, B, B, W
 ]
+shutdown = [
+K, K, K, K, K, K, K, K,
+K, K, K, K, O, L, K, K,
+K, K, K, K, B, Y, K, K,
+K, K, W, W, W, W, K, K,
+K, K, K, K, K, K, K, K,
+K, K, E, E, E, E, K, K,
+K, K, K, K, K, K, K, K,
+K, K, K, K, K, K, K, K, 
+]
 
 x = 3
 y = 3
@@ -110,12 +120,15 @@ while(True):
                 os.system("python logs_for_frogger.py")
             elif(x == 3 and y == 1 and state == 'screen'):#game4
                 os.system("python game4.py")
+            elif(x == 7 and y == 7 and state == 'screen'):#weather
+                os.system("python weather.py")
             elif(x == 1 and y == 4 and state == 'menu'):#files
                 state = 'files'
             elif(x == 0 and y == 3 and state == 'menu'):#profile
                 state = 'profile'
-            elif(x == 7 and y == 7 and state == 'menu'):#weather
-                os.system("python weather.py")
+            elif(x == 0 and y == 6 and state == 'menu'):#power button
+                sense.set_pixels(shutdown)
+                exit()
             elif(x < 2 and y > 3 and state == 'menu'):#menu click
                 state = 'menu'
             else:
