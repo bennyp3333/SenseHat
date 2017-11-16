@@ -63,6 +63,16 @@ W, W, W, B, B, W, W, W,
 W, B, B, B, B, B, B, W,
 W, B, B, B, B, B, B, W
 ]
+shutdown = [
+K, K, K, K, K, K, K, K,
+K, K, K, K, O, L, K, K,
+K, K, K, K, B, Y, K, K,
+K, K, W, W, W, W, K, K,
+K, K, K, K, K, K, K, K,
+K, K, E, E, E, E, K, K,
+K, K, K, K, K, K, K, K,
+K, K, K, K, K, K, K, K, 
+]
 
 x = 3
 y = 3
@@ -86,7 +96,7 @@ def refresh():
     print("X:{0}    Y:{1}".format(x, y))
 refresh()
 pygame.init()
-pygame.mixer.music.load('Mouse_click_sound_effect_2[Mp3Converter.net].wav')
+pygame.mixer.music.load('sounds/Mouse_click_sound_effect_2[Mp3Converter.net].wav')
 while(True):  
     for event in sense.stick.get_events():
         if((event.action == 'pressed' or event.action == 'held') and event.direction == 'down'):
@@ -104,15 +114,23 @@ while(True):
             elif(x == 1 and y == 1 and state == 'screen'):#game1
                 os.system("python LawnMower.py")
             elif(x == 1 and y == 3 and state == 'screen'):#game2
-                os.system("python game2.py")
+                os.system("python Galaga.py")
             elif(x == 1 and y == 5 and state == 'screen'):#game3
                 os.system("python frogger.py")
+                os.system("python logs_for_frogger.py")
             elif(x == 3 and y == 1 and state == 'screen'):#game4
                 os.system("python game4.py")
+            elif(x == 7 and y == 7 and state == 'screen'):#weather
+                os.system("python weather.py")
             elif(x == 1 and y == 4 and state == 'menu'):#files
                 state = 'files'
             elif(x == 0 and y == 3 and state == 'menu'):#profile
                 state = 'profile'
+            elif(x == 2 and y == 3 and state == 'files'):#picture app
+                os.system("python pictures.py")
+            elif(x == 0 and y == 6 and state == 'menu'):#power button
+                sense.set_pixels(shutdown)
+                exit()
             elif(x < 2 and y > 3 and state == 'menu'):#menu click
                 state = 'menu'
             else:
