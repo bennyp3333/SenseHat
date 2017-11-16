@@ -49,6 +49,26 @@ def collision(missiles, fighters): #checks if missile hits
         hit_list.append(hit_info)
   
   return hit_list
+  
+def formation(x_max, y_max, form_num):
+  ship_form = []
+  origin = [int(x_max/2), int(y_max/2)]
+  ship_form.append(origin)
+  if form_num == 0:
+    ship_form.append([origin[0]+1, origin[1]-1])
+    ship_form.append([origin[0]-1, origin[1]-1])
+    ship_form.append([origin[0]+2, origin[1]-1])
+    ship_form.append([origin[0]-2, origin[1]-1])
+  elif form_num == 1:
+    print()
+  elif form_num == 2:
+    print()
+  elif form_num == 3:
+    print()
+  else:
+    print()
+    
+  return ship_form
 
 def main(): 
   sense = SenseHat()
@@ -63,9 +83,9 @@ def main():
   ship = SpaceShip(int((x_max)/2), y_max, False, 1)
   fighters.append(ship) #first index always player
   
-  for i in range(5):
-    randX, randY = random.randint(x_min+1, x_max-1), random.randint(y_min+1, y_max-2)
-    cur_ship = SpaceShip(randX, randY, True, 1)
+  for ship_loc in formation(x_max, y_max, 0):
+    #randX, randY = random.randint(x_min+1, x_max-1), random.randint(y_min+1, y_max-2)
+    cur_ship = SpaceShip(ship_loc[0], ship_loc[1], True, 1)
     #print ('yes', cur_ship.x_loc, cur_ship.y_loc)
     sense.set_pixel(cur_ship.x_loc, cur_ship.y_loc, cur_ship.color)
     #print(cur_ship.hp)
