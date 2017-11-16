@@ -42,19 +42,22 @@ def collision(missiles, fighters): #checks if missile hits
   hit_list = []
   for missile in missiles:
     #moveCheck = missile.y_loc+missile.modify
+    past_player = False
     for ship in fighters:
-      if ship.x_loc == missile.x_loc and ship.y_loc == missile.y_loc:
+      if (ship.x_loc == missile.x_loc and ship.y_loc == missile.y_loc) or past_player == True and ship.x_loc == fighters[0].x_loc and ship.y_loc == fighters[0].y_loc:
         hit_info = [ship, missile]
         #print(hit_info[0].hp)
         hit_list.append(hit_info)
+        past_player = True
   
   return hit_list
   
-def formation(x_max, y_max, form_num):
+def formation(x_origin, y_origin, form_num):
   ship_form = []
-  origin = [int(x_max/2), int(y_max/2)]
+  origin = [x_origin, y_origin]
   ship_form.append(origin)
-  if form_num == 0:
+  if form_num == 0 and origin[0]+2<=7 and origin[0]-2>=0 and origin[1]>=0 and origin[1]<=7: #can x and y max/min to variables
+    #print('blah')
     ship_form.append([origin[0]+1, origin[1]-1])
     ship_form.append([origin[0]-1, origin[1]-1])
     ship_form.append([origin[0]+2, origin[1]-1])
@@ -65,9 +68,7 @@ def formation(x_max, y_max, form_num):
     print()
   elif form_num == 3:
     print()
-  else:
-    print()
-    
+  
   return ship_form
 
 def main(): 
@@ -82,24 +83,23 @@ def main():
   fighters, enemies, missile_list = [], [], []
   ship = SpaceShip(int((x_max)/2), y_max, False, 1)
   fighters.append(ship) #first index always player
+  sense.set_pixel(fighters[0].x_loc, fighters[0].y_loc, fighters[0].color)
+  #shift(sense, ship, space_color)
   
-  for ship_loc in formation(x_max, y_max, 0):
+  for ship_loc in formation(int(x_max/2), int(y_max/2), 0): #sets ship to a formation
     #randX, randY = random.randint(x_min+1, x_max-1), random.randint(y_min+1, y_max-2)
     cur_ship = SpaceShip(ship_loc[0], ship_loc[1], True, 1)
     #print ('yes', cur_ship.x_loc, cur_ship.y_loc)
     sense.set_pixel(cur_ship.x_loc, cur_ship.y_loc, cur_ship.color)
-    #print(cur_ship.hp)
     fighters.append(cur_ship)
     enemies.append(cur_ship)
-      
-  sense.set_pixel(fighters[0].x_loc, fighters[0].y_loc, fighters[0].color)
-  #shift(sense, ship, space_color)
   
+  enemy_direction = True #true means shift left, enemies by default go left
   count = 0
   while(True):
     for event in sense.stick.get_events(): #using held breaks so far
       #print(command.direction)
-      if (event.action == 'pressed' or event.action == 'hold'):
+      if event.action == 'pressed':
         if event.direction == 'left' and fighters[0].x_loc > x_min:
           #print('yesl')
           fighters[0].x_loc-=1
@@ -121,12 +121,32 @@ def main():
     time.sleep(0.01)
     count+=1
       
-    if count==50:
-      count = 0
-      for ship in enemies: #moves the enemie ships
-        #print(ship.enemy, ship.x_loc, ship.y_loc)
-        shift(sense, ship, space_color)
+    if count==50 or count==100:
+      
+      x_left = formation(enemies[0].x_loc-1, enemies[0].y_loc, 0)
+      x_right = formation(enemies[0].x_loc+1, enemies[0].y_loc, 0) 
+      y_down = formation(enemies[0].x_loc, enemies[0].y_loc-1, 0)
+      if enemy_direction == True and len(x_left) != 1:
+        shift = x_left
+      elif enemy_direction == True and len(x_left) == 1:
+        shift = y_down
+        enemy_direction = False
+      elif enemy_direction == False and len(x_right) != 1:
+        shift = x_right
+      elif enemy_direction == False and len(x_right) == 1:
+        shift = y_down
+        enemy_direction = True
+          
         
+      print('got hered')
+      for i in range(len(enemies)-1): #moves the enemy ships
+        print(shift[i][0], shift[i][1])
+        #enemies[i].x_loc, enemies[i].y_loc = shift[i][0], shift[i][1]
+        #print(enemies[i])
+        #shift(sense, enemies[i], space_color)
+      count = 0
+        
+      print('got here')
       for missile in missile_list: #moves the missiles
         if missile.y_loc-1 >= y_min and missile.y_loc+1 <= y_max:
           missile.y_loc+=missile.modify
