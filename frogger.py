@@ -14,7 +14,7 @@ C = [0, 255, 255]  # Cyan
 I = [0, 128, 248]  # Light Blue, Indigo?
 
 B = [0, 0, 255]  # Blue
-P = [127, 0, 255]  # Purple
+P = [120, 0, 248]  # Purple
 H = [255, 0, 255]  # Hot Pink
 D = [255, 0, 127]  # Dark Red/Pink
 
@@ -38,10 +38,12 @@ class log:
   def moveLog(self):
     rand = random.randrange(1,10)
     if self.logx > -1 and self.logx < 8:
-      if rand<6:
+      if rand<6 and sense.get_pixel(self.logx, self.logy) != P:
         sense.set_pixel(self.logx, self.logy, L)
       else:
         sense.set_pixel(self.logx, self.logy, I)
+        if sense.get_pixel(self.logx, self.logy) == P:
+          frogger()
     self.logx += 1
     if self.logx > 8:
       self.logx = random.randrange(-30,0)
@@ -62,8 +64,9 @@ def frogger():
       sense.set_pixels(bg)
   sense.set_pixel(0, 7, P)
   counter = 0
+  wasLog = 0
   while True:
-    if counter >= 50:
+    if counter >= 5:
       log1.moveLog()
       log2.moveLog()
       log3.moveLog()
@@ -96,7 +99,8 @@ def frogger():
             frogger()
           lastx = x
           x -= 1
-        sense.set_pixel(lastx, y, bg[xy(lastx, y)])
+          sense.set_pixel(lastx, y, bg[xy(lastx, y)])
     time.sleep(0.01)
     counter += 1
+    print(sense.get_pixel(0,7))
 frogger()
