@@ -86,7 +86,7 @@ def refresh():
     print("X:{0}    Y:{1}".format(x, y))
 refresh()
 pygame.init()
-pygame.mixer.music.load('Mouse_click_sound_effect_2[Mp3Converter.net].wav')
+pygame.mixer.music.load('sounds/Mouse_click_sound_effect_2[Mp3Converter.net].wav')
 while(True):  
     for event in sense.stick.get_events():
         if((event.action == 'pressed' or event.action == 'held') and event.direction == 'down'):
@@ -107,12 +107,15 @@ while(True):
                 os.system("python game2.py")
             elif(x == 1 and y == 5 and state == 'screen'):#game3
                 os.system("python frogger.py")
+                os.system("python logs_for_frogger.py")
             elif(x == 3 and y == 1 and state == 'screen'):#game4
                 os.system("python game4.py")
             elif(x == 1 and y == 4 and state == 'menu'):#files
                 state = 'files'
             elif(x == 0 and y == 3 and state == 'menu'):#profile
                 state = 'profile'
+            elif(x == 7 and y == 7 and state == 'menu'):#weather
+                os.system("python weather.py")
             elif(x < 2 and y > 3 and state == 'menu'):#menu click
                 state = 'menu'
             else:

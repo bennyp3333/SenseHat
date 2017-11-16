@@ -5,7 +5,7 @@ import os
 import pygame
 
 pygame.init()
-pygame.mixer.music.load('Microsoft_Windows_XP_Startup_Sound[Mp3Converter.net].mp3')
+pygame.mixer.music.load('sounds/Microsoft_Windows_XP_Startup_Sound[Mp3Converter.net].mp3')
 pygame.mixer.music.play()
 
 R = [255, 0, 0]  # Red

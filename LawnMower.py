@@ -25,7 +25,8 @@ class mowing:
     sense.set_pixel(self.loX, self.loY, [248, 2, 36])
     
     while(True):
-      orient = sense.get_orientation()
+      ##orient = sense.get_orientation()
+      orient = sense.get_orientation_degrees()
       x = orient["pitch"]
       y = orient["roll"]
       
