@@ -43,22 +43,22 @@ def collision(missiles, fighters): #checks if missile hits
   hit_list = []
   for missile in missiles:
     #moveCheck = missile.y_loc+missile.modify
-    past_player = False
+    #past_player = False
     for ship in fighters:
       if ship.x_loc==missile.x_loc and ship.y_loc==missile.y_loc:
         #print(hit_info[0].hp)
         hit_list.append([ship, missile])
         past_player = True
-      elif past_player==True and ship.x_loc==fighters[0].x_loc and ship.y_loc==fighters[0].y_loc:
-        hit_list.append([fighters[0], ship])
+      #elif past_player==True and ship.x_loc==fighters[0].x_loc and ship.y_loc==fighters[0].y_loc:
+      #  hit_list.append([fighters[0], ship])
   
   return hit_list
   
-def formation(x_origin, y_origin, form_num):
+def formation(form_num, x_origin, y_origin):
   ship_form = []
   origin = [x_origin, y_origin]
   ship_form.append(origin)
-  if form_num == 0 and origin[0]+2<=7 and origin[0]-2>=0 and origin[1]>=0 and origin[1]<=7: #can x and y max/min to variables
+  if form_num == 0 and origin[0]+2<=7 and origin[0]-2>=0 and origin[1]>=1 and origin[1]<=6: #can x and y max/min to variables
     #print('blah')
     ship_form.append([origin[0]+2, origin[1]])
     ship_form.append([origin[0]-2, origin[1]])
@@ -86,15 +86,16 @@ def main():
   ship = SpaceShip(int((x_max)/2), y_max, False, 1)
   fighters.append(ship) #first index always player
   sense.set_pixel(fighters[0].x_loc, fighters[0].y_loc, fighters[0].color)
+  form = 0
   
-  for ship_loc in formation(int(x_max/2), int(y_max/2-1), 0): #sets ship to an intial formation
+  for ship_loc in formation(form, int(x_max/2), int(y_max/2-1)): #sets ship to an intial formation
     #randX, randY = random.randint(x_min+1, x_max-1), random.randint(y_min+1, y_max-2)
     cur_ship = SpaceShip(ship_loc[0], ship_loc[1], True, 1)
     sense.set_pixel(cur_ship.x_loc, cur_ship.y_loc, cur_ship.color)
     fighters.append(cur_ship)
     enemies.append(cur_ship)
   
-  enemy_direction = True #true means shift left, enemies by default go right
+  enemy_direction = [True, False] #true means shift right and also up, enemies by default go right and down
   count = 0
   while(True):
     for event in sense.stick.get_events(): #using held breaks so far
@@ -127,23 +128,47 @@ def main():
     if count%50==0:
       if count == 150: #moves one third of missile auto speed
         #enemies[0] is the origin of the formation
-        x_left = formation(enemies[0].x_loc-1, enemies[0].y_loc, 0)
-        x_right = formation(enemies[0].x_loc+1, enemies[0].y_loc, 0) 
-        y_down = formation(enemies[0].x_loc, enemies[0].y_loc+1, 0)
-        print(len(x_left), len(x_right), len(y_down))
-        if enemy_direction == True and len(x_right) != 1:
+        x_left = formation(form, enemies[0].x_loc-1, enemies[0].y_loc)
+        x_right = formation(form, enemies[0].x_loc+1, enemies[0].y_loc)
+        y_up = formation(form, enemies[0].x_loc, enemies[0].y_loc-1)
+        y_down = formation(form, enemies[0].x_loc, enemies[0].y_loc+1)
+        #print(len(x_left), len(x_right), len(y_down))
+        if enemy_direction[0]==True and len(x_right)!=1:
           shift = x_right
-        elif enemy_direction == True and len(x_right) == 1:
-          shift = y_down
-          enemy_direction = False
-        elif enemy_direction == False and len(x_left) != 1:
+        elif enemy_direction[0]==True and len(x_right)==1:
+          enemy_direction[0] = not enemy_direction[0]
+          #shift = y_down
+          
+          if enemy_direction[1]==False and len(y_down)!=1:
+            shift = y_down
+          elif enemy_direction[1]==False and len(y_down)==1:
+            enemy_direction[1] = not enemy_direction[1]
+            shift = y_up
+          elif enemy_direction[1]==True and len(y_up)!=1:
+            shift = y_up
+          elif enemy_direction[1]==True and len(y_up)==1:
+            enemy_direction[1] = not enemy_direction[1]
+            shift = y_down
+          
+        elif enemy_direction[0]==False and len(x_left)!=1:
           shift = x_left
-        elif enemy_direction == False and len(x_left) == 1:
-          shift = y_down
-          enemy_direction = True
-            
+        elif enemy_direction[0]==False and len(x_left)==1:
+          enemy_direction[0] = not enemy_direction[0]
+          #shift = y_down
+          
+          if enemy_direction[1]==False and len(y_down)!=1:
+            shift = y_down
+          elif enemy_direction[1]==False and len(y_down)==1:
+            enemy_direction[1] = not enemy_direction[1]
+            shift = y_up
+          elif enemy_direction[1]==True and len(y_up)!=1:
+            shift = y_up
+          elif enemy_direction[1]==True and len(y_up)==1:
+            enemy_direction[1] = not enemy_direction[1]
+            shift = y_down
+          
         for i in range(len(enemies)): #moves the enemy ships
-          print(shift[i][0], shift[i][1])
+          #print(shift[i][0], shift[i][1])
           enemies[i].x_loc, enemies[i].y_loc = shift[i][0], shift[i][1]
           cur_ship = enemies[i]
           #shift(sense, cur_ship, space_color)
