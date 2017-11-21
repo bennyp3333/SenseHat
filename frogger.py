@@ -66,7 +66,7 @@ def frogger():
   counter = 0
   wasLog = 0
   while True:
-    if counter >= 5:
+    if counter >= 30:
       log1.moveLog()
       log2.moveLog()
       log3.moveLog()
