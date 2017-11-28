@@ -117,7 +117,6 @@ class Game:
   
   def main(): 
     Game.create_field()
-    
     enemy_direction = [True, False] #true means shift right and also up, enemies by default go right and down
     count = 0
 
@@ -198,8 +197,8 @@ class Game:
             #shift(sense, cur_ship, space_color)
             if random.randint(0, 3)==1: #fires missile
               cur_miss = Game.enemies[i].fire(5)
-              Game.missile_list.append(cur_miss)
               Game.sense.set_pixel(cur_miss.x_loc, cur_miss.y_loc, cur_miss.color)
+              Game.missile_list.append(cur_miss)
             Game.sense.set_pixel(Game.enemies[i].last_x, Game.enemies[i].last_y, Game.space_color)
             Game.enemies[i].last_x, Game.enemies[i].last_y = Game.enemies[i].x_loc, Game.enemies[i].y_loc
             Game.sense.set_pixel(Game.enemies[i].x_loc, Game.enemies[i].y_loc, Game.enemies[i].color)
@@ -221,21 +220,22 @@ class Game:
           print(hit_info[0].hp, hit_info[1].damage)
           hit_info[0].hp -= hit_info[1].damage
           Game.missile_list.remove(hit_info[1])
-          if hit_info[0].hp <= 0:
+          if hit_info[0].hp <= 0 and hit_info[0].enemy == True: #only removes if an enemy
             try:
               Game.fighters.remove(hit_info[0])
-              if hit_info[0].enemy == True:
-                Game.enemies.remove(hit_info[0])
-              else:
-                break
+              Game.enemies.remove(hit_info[0])
             except:
               print('yes')
-            Game.sense.set_pixel(hit_info[0].x_loc, hit_info[0].y_loc, hit_info[1].color)
-            time.sleep(0.1)
-            Game.sense.set_pixel(hit_info[0].x_loc, hit_info[0].y_loc, Game.space_color)
+            Game.sense.set_pixel(hit_info[0].x_loc, hit_info[0].y_loc, hit_info[0].color)
+            #time.sleep(0.1)
+            #Game.sense.set_pixel(hit_info[0].x_loc, hit_info[0].y_loc, Game.space_color)
             
         if Game.fighters[0].hp <= 0:
+          Game.sense.show_message("Your ship was destroyed")
           break
+        elif len(Game.fighters)==1:
+          Game.sense.show_message("All enemies killed, next round")
+          Game.create_field()
         
       #sense.set_pixel(ship.last_x, ship.last_y, space_color)
       #ship.last_x, ship.last_y = ship.x_loc, ship.y_loc
