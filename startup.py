@@ -80,5 +80,5 @@ while(n < 10):
     sense.set_pixels(backdrop4)
     time.sleep(0.1)
     n = n + 1
-#run menu  
+#run menu
 os.system("python menu2.py")

@@ -78,6 +78,8 @@ x = 3
 y = 3
 sense = SenseHat()
 
+##os.system("python screensaver.py")
+
 state = 'screen'
 
 def clamp(value, min_value=0, max_value=7):
@@ -133,6 +135,11 @@ while(True):
                 exit()
             elif(x < 2 and y > 3 and state == 'menu'):#menu click
                 state = 'menu'
+            elif(state == 'files'):
+                if(x == 6 and y == 1):
+                    state = 'screen'
+                else:
+                    state == 'files'
             else:
                 state = 'screen'
         refresh()
