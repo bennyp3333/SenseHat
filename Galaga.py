@@ -44,7 +44,7 @@ class Game:
   fighters, enemies, missile_list = [], [], []
   form = random.randint(0,3)
   
-  def create_field():
+  def create_field(): #draw starting formation and create ships
     Game.fighters, Game.enemies, Game.missile_list = [], [], []
     Game.form = random.randint(0,3)
     for i in range(Game.x_max+1): #sets background
@@ -62,12 +62,12 @@ class Game:
       Game.fighters.append(cur_ship)
       Game.enemies.append(cur_ship)
     
-  def shift(item): #not working anymore
+  def move(item): #moves item, under assumption previous space is blank
     Game.sense.set_pixel(item.last_x, item.last_y, Game.space_color)
     item.last_x, item.last_y = item.x_loc, item.y_loc
     Game.sense.set_pixel(item.x_loc, item.y_loc, item.color)
     
-  def collision(): #checks if missile hits
+  def collision(): #checks if missile hits only ship, not other missiles
     hit_list = []
     for missile in Game.missile_list:
       #moveCheck = missile.y_loc+missile.modify
@@ -88,7 +88,6 @@ class Game:
     ship_form.append(origin)
     #only add if within range
     if form_num == 0 and origin[0]+2<=7 and origin[0]-2>=0 and origin[1]>=1 and origin[1]<=6: #can set x and y max/min to variables
-      #print('blah')
       ship_form.append([origin[0]+2, origin[1]])
       ship_form.append([origin[0]-2, origin[1]])
       ship_form.append([origin[0]+1, origin[1]-1])
@@ -98,19 +97,16 @@ class Game:
       ship_form.append([origin[0]-2, origin[1]])
       ship_form.append([origin[0]+3, origin[1]-1])
       ship_form.append([origin[0]-3, origin[1]-1])
-      #print()
     elif form_num == 2 and origin[0]+3<=7 and origin[0]-3>=0 and origin[1]>=1 and origin[1]+1<=6:
       ship_form.append([origin[0]+3, origin[1]])
       ship_form.append([origin[0]-3, origin[1]])
       ship_form.append([origin[0]+1, origin[1]+1])
       ship_form.append([origin[0]-1, origin[1]+1])
-      #print()
     elif form_num == 3 and origin[0]+2<=7 and origin[0]-2>=0 and origin[1]>=1 and origin[1]+1<=6:
       ship_form.append([origin[0]+1, origin[1]-1])
       ship_form.append([origin[0]-1, origin[1]-1])
       ship_form.append([origin[0]+2, origin[1]+1])
       ship_form.append([origin[0]-2, origin[1]+1])
-      #print('y')
     
     return ship_form
   
@@ -140,10 +136,7 @@ class Game:
         #  print ('held')
         #  break
         
-        #shift(sense, fighters[0], space_color)  
-        Game.sense.set_pixel(Game.fighters[0].last_x, Game.fighters[0].last_y, Game.space_color)
-        Game.fighters[0].last_x, Game.fighters[0].last_y = Game.fighters[0].x_loc, Game.fighters[0].y_loc
-        Game.sense.set_pixel(Game.fighters[0].x_loc, Game.fighters[0].y_loc, Game.fighters[0].color)
+        Game.move(Game.fighters[0])
       
       time.sleep(0.01)
       count+=1
@@ -193,31 +186,27 @@ class Game:
           for i in range(len(Game.enemies)): #moves the enemy ships
             #print(shift[i][0], shift[i][1])
             Game.enemies[i].x_loc, Game.enemies[i].y_loc = shift[i][0], shift[i][1]
-            cur_ship = Game.enemies[i]
-            #shift(sense, cur_ship, space_color)
+            #cur_ship = Game.enemies[i]
+            
             if random.randint(0, 3)==1: #fires missile
               cur_miss = Game.enemies[i].fire(5)
               Game.sense.set_pixel(cur_miss.x_loc, cur_miss.y_loc, cur_miss.color)
               Game.missile_list.append(cur_miss)
-            Game.sense.set_pixel(Game.enemies[i].last_x, Game.enemies[i].last_y, Game.space_color)
-            Game.enemies[i].last_x, Game.enemies[i].last_y = Game.enemies[i].x_loc, Game.enemies[i].y_loc
-            Game.sense.set_pixel(Game.enemies[i].x_loc, Game.enemies[i].y_loc, Game.enemies[i].color)
-          
+             
+            Game.move(Game.enemies[i])
+
           count = 0
           
         for missile in Game.missile_list: #moves the missiles
           if missile.y_loc-1 >= Game.y_min and missile.y_loc+1 <= Game.y_max:
             missile.y_loc+=missile.modify
-            #shift(sense, missile, space_color)
-            Game.sense.set_pixel(missile.last_x, missile.last_y, Game.space_color)
-            missile.last_x, missile.last_y = missile.x_loc, missile.y_loc
-            Game.sense.set_pixel(missile.x_loc, missile.y_loc, missile.color)
+            Game.move(missile)
           else:
             Game.sense.set_pixel(missile.x_loc, missile.y_loc, Game.space_color)
             Game.missile_list.remove(missile)
             
         for hit_info in Game.collision():
-          print(hit_info[0].hp, hit_info[1].damage)
+          print(hit_info[0].hp, hit_info[1].damage, hit_info[0].enemy)
           hit_info[0].hp -= hit_info[1].damage
           Game.missile_list.remove(hit_info[1])
           if hit_info[0].hp <= 0 and hit_info[0].enemy == True: #only removes if an enemy
