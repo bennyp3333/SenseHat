@@ -42,7 +42,26 @@ class Game:
   space_color = [5, 5, 5]
   x_min, x_max, y_min, y_max = 0, 7, 0, 7
   fighters, enemies, missile_list = [], [], []
+  form = random.randint(0,3)
   
+  def create_field():
+    Game.fighters, Game.enemies, Game.missile_list = [], [], []
+    Game.form = random.randint(0,3)
+    for i in range(Game.x_max+1): #sets background
+      for j in range(Game.y_max+1):
+        Game.sense.set_pixel(i, j, Game.space_color)
+    
+    ship = SpaceShip(int((Game.x_max)/2), Game.y_max, False, 1)
+    Game.fighters.append(ship) #first index always player
+    Game.sense.set_pixel(Game.fighters[0].x_loc, Game.fighters[0].y_loc, Game.fighters[0].color)
+    
+    for ship_loc in Game.formation(Game.form, int(Game.x_max/2), int(Game.y_max/2-1)): #sets ship to an intial formation
+      #randX, randY = random.randint(x_min+1, x_max-1), random.randint(y_min+1, y_max-2)
+      cur_ship = SpaceShip(ship_loc[0], ship_loc[1], True, 1)
+      Game.sense.set_pixel(cur_ship.x_loc, cur_ship.y_loc, cur_ship.color)
+      Game.fighters.append(cur_ship)
+      Game.enemies.append(cur_ship)
+    
   def shift(item): #not working anymore
     Game.sense.set_pixel(item.last_x, item.last_y, Game.space_color)
     item.last_x, item.last_y = item.x_loc, item.y_loc
@@ -97,24 +116,11 @@ class Game:
   
   
   def main(): 
-    for i in range(Game.x_max+1): #sets background
-      for j in range(Game.y_max+1):
-        Game.sense.set_pixel(i, j, Game.space_color)
-    
-    ship = SpaceShip(int((Game.x_max)/2), Game.y_max, False, 1)
-    Game.fighters.append(ship) #first index always player
-    Game.sense.set_pixel(Game.fighters[0].x_loc, Game.fighters[0].y_loc, Game.fighters[0].color)
-    form = random.randint(0,3)
-    
-    for ship_loc in Game.formation(form, int(Game.x_max/2), int(Game.y_max/2-1)): #sets ship to an intial formation
-      #randX, randY = random.randint(x_min+1, x_max-1), random.randint(y_min+1, y_max-2)
-      cur_ship = SpaceShip(ship_loc[0], ship_loc[1], True, 1)
-      Game.sense.set_pixel(cur_ship.x_loc, cur_ship.y_loc, cur_ship.color)
-      Game.fighters.append(cur_ship)
-      Game.enemies.append(cur_ship)
+    Game.create_field()
     
     enemy_direction = [True, False] #true means shift right and also up, enemies by default go right and down
     count = 0
+
     while(True):
       for event in Game.sense.stick.get_events(): #using held breaks so far
         #print(command.direction)
@@ -146,10 +152,10 @@ class Game:
       if count%50==0:
         if count == 150: #moves one third of missile auto speed
           #enemies[0] is the origin of the formation
-          x_left = Game.formation(form, Game.enemies[0].x_loc-1, Game.enemies[0].y_loc)
-          x_right = Game.formation(form, Game.enemies[0].x_loc+1, Game.enemies[0].y_loc)
-          y_up = Game.formation(form, Game.enemies[0].x_loc, Game.enemies[0].y_loc-1)
-          y_down = Game.formation(form, Game.enemies[0].x_loc, Game.enemies[0].y_loc+1)
+          x_left = Game.formation(Game.form, Game.enemies[0].x_loc-1, Game.enemies[0].y_loc)
+          x_right = Game.formation(Game.form, Game.enemies[0].x_loc+1, Game.enemies[0].y_loc)
+          y_up = Game.formation(Game.form, Game.enemies[0].x_loc, Game.enemies[0].y_loc-1)
+          y_down = Game.formation(Game.form, Game.enemies[0].x_loc, Game.enemies[0].y_loc+1)
           #print(len(x_left), len(x_right), len(y_down))
           if enemy_direction[0]==True and len(x_right)!=1:
             shift = x_right
@@ -187,7 +193,6 @@ class Game:
             
           for i in range(len(Game.enemies)): #moves the enemy ships
             #print(shift[i][0], shift[i][1])
-            
             Game.enemies[i].x_loc, Game.enemies[i].y_loc = shift[i][0], shift[i][1]
             cur_ship = Game.enemies[i]
             #shift(sense, cur_ship, space_color)
@@ -221,11 +226,16 @@ class Game:
               Game.fighters.remove(hit_info[0])
               if hit_info[0].enemy == True:
                 Game.enemies.remove(hit_info[0])
+              else:
+                break
             except:
               print('yes')
             Game.sense.set_pixel(hit_info[0].x_loc, hit_info[0].y_loc, hit_info[1].color)
             time.sleep(0.1)
             Game.sense.set_pixel(hit_info[0].x_loc, hit_info[0].y_loc, Game.space_color)
+            
+        if Game.fighters[0].hp <= 0:
+          break
         
       #sense.set_pixel(ship.last_x, ship.last_y, space_color)
       #ship.last_x, ship.last_y = ship.x_loc, ship.y_loc
