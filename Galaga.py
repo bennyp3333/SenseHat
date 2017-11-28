@@ -182,9 +182,13 @@ def main():
           
         for i in range(len(enemies)): #moves the enemy ships
           #print(shift[i][0], shift[i][1])
+          
           enemies[i].x_loc, enemies[i].y_loc = shift[i][0], shift[i][1]
           cur_ship = enemies[i]
           #shift(sense, cur_ship, space_color)
+          if random.randint(0, 1)==1:
+            curMiss = enemies[i].fire(5)
+            missile_list.append(curMiss)
           sense.set_pixel(enemies[i].last_x, enemies[i].last_y, space_color)
           enemies[i].last_x, enemies[i].last_y = enemies[i].x_loc, enemies[i].y_loc
           sense.set_pixel(enemies[i].x_loc, enemies[i].y_loc, enemies[i].color)
