@@ -58,18 +58,31 @@ def formation(form_num, x_origin, y_origin):
   ship_form = []
   origin = [x_origin, y_origin]
   ship_form.append(origin)
-  if form_num == 0 and origin[0]+2<=7 and origin[0]-2>=0 and origin[1]>=1 and origin[1]<=6: #can x and y max/min to variables
+  #only add if within range
+  if form_num == 0 and origin[0]+2<=7 and origin[0]-2>=0 and origin[1]>=1 and origin[1]<=6: #can set x and y max/min to variables
     #print('blah')
     ship_form.append([origin[0]+2, origin[1]])
     ship_form.append([origin[0]-2, origin[1]])
     ship_form.append([origin[0]+1, origin[1]-1])
     ship_form.append([origin[0]-1, origin[1]-1])
-  elif form_num == 1:
-    print()
-  elif form_num == 2:
-    print()
-  elif form_num == 3:
-    print()
+  elif form_num == 1 and origin[0]+3<=7 and origin[0]-3>=0 and origin[1]>=1 and origin[1]<=6:
+    ship_form.append([origin[0]+2, origin[1]])
+    ship_form.append([origin[0]-2, origin[1]])
+    ship_form.append([origin[0]+3, origin[1]-1])
+    ship_form.append([origin[0]-3, origin[1]-1])
+    #print()
+  elif form_num == 2 and origin[0]+3<=7 and origin[0]-3>=0 and origin[1]>=1 and origin[1]+1<=6:
+    ship_form.append([origin[0]+3, origin[1]])
+    ship_form.append([origin[0]-3, origin[1]])
+    ship_form.append([origin[0]+1, origin[1]+1])
+    ship_form.append([origin[0]-1, origin[1]+1])
+    #print()
+  elif form_num == 3 and origin[0]+2<=7 and origin[0]-2>=0 and origin[1]>=1 and origin[1]+1<=6:
+    ship_form.append([origin[0]+1, origin[1]-1])
+    ship_form.append([origin[0]-1, origin[1]-1])
+    ship_form.append([origin[0]+2, origin[1]+1])
+    ship_form.append([origin[0]-2, origin[1]+1])
+    #print('y')
   
   return ship_form
 
@@ -86,7 +99,7 @@ def main():
   ship = SpaceShip(int((x_max)/2), y_max, False, 1)
   fighters.append(ship) #first index always player
   sense.set_pixel(fighters[0].x_loc, fighters[0].y_loc, fighters[0].color)
-  form = 0
+  form = random.randint(0,3)
   
   for ship_loc in formation(form, int(x_max/2), int(y_max/2-1)): #sets ship to an intial formation
     #randX, randY = random.randint(x_min+1, x_max-1), random.randint(y_min+1, y_max-2)
