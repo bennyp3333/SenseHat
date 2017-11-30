@@ -1,5 +1,7 @@
 from sense_hat import SenseHat
 import time
+import os
+##import subprocess
 
 sense = SenseHat()
 
@@ -65,6 +67,8 @@ newZ = 0
 
 n = 0
 
+##p = subprocess.Popen(['python', 'menu2.py'])
+##os.system("python menu2.py")
 while True:
     acceleration = sense.get_accelerometer_raw()
     x = acceleration['x']
@@ -95,8 +99,9 @@ while True:
     oldZ = newZ
     
     if(n > 1000):
-        for pix in pixels:
-            next_colour(pix)
-        sense.set_pixels(pixels) 
+        for i in range(10):
+            for pix in pixels:
+                next_colour(pix)
+            sense.set_pixels(pixels) 
 
     msleep(2)

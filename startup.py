@@ -82,3 +82,4 @@ while(n < 10):
     n = n + 1
 #run menu
 os.system("python menu2.py")
+##os.system("python menu2.py & python screensaver.py")

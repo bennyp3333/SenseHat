@@ -87,8 +87,8 @@ class catch:
 	def falling(self):
 	  #if pixel in bottom row is not the player, set it to black
 	  for x in range (0,7):
-  	  if sense.get_pixel(x,7) != [248,252,248]:
-	      sense.set_pixel(x,7,[0,0,0])
+            if sense.get_pixel(x,7) != [248,252,248]:
+               sense.set_pixel(x,7,[0,0,0])
 	  #if pixel is colored in not the bottom row, move it down one, also allows the player to "catch" an ingredient
 	  for y in range (6,-1,-1):
 	    for x in range (0,7):
