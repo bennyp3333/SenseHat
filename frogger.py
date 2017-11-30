@@ -78,7 +78,7 @@ def frogger():
           if sense.get_pixel(x, y-1) == I:
             frogger()
           if y-1==0:
-            frogger()
+            exit()
           lasty = y
           y -= 1
           sense.set_pixel(x, lasty, bg[xy(x, lasty)])
