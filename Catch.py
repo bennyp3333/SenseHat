@@ -14,6 +14,7 @@ class catch:
 		self.roundNum = 1
 		self.tempX = 0
 		self.tempY = 0
+		self.stop = False
 		#recipe arrays
 		self.recipeArray1 = [[206,154,64],[248,0,0],[206,154,64]]
 		self.recipeArray2 = [[0,252,0],[248,164,0],[206,154,64],[206,154,64]]
@@ -55,12 +56,15 @@ class catch:
 			elif fall == False:
 				fall = True
 				self.summonIngredient()
+				
+			if self.stop == True:
+			  break
 			
 	def setupRound(self):
 		#check round number, print the desired recipe and create recipe array
 		yPlace = 0
 		if self.roundNum == 1:
-		  sense.show_message("Catch ingredients in the top right! Round one, raspberry pie!")
+		  #sense.show_message("Catch ingredients in the top right! Round one, raspberry pie!")
 		  for i in self.recipeArray1:
 		    sense.set_pixel(7,yPlace,self.recipeArray1[yPlace])
 		    yPlace += 1
@@ -76,6 +80,7 @@ class catch:
 		    yPlace += 1
 		else:
 		  sense.show_message("You Win!")
+		  self.stop = True
 		  
 		
 	def summonIngredient(self):
@@ -114,6 +119,7 @@ class catch:
 	  else:
 	    #faliure state
 	    sense.show_message("Oh No! You failed!")
+	    self.stop = True
     
     
 sense = SenseHat()
